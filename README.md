@@ -1,5 +1,5 @@
-# Chicago crimes location display
-Display of the location of crimes that happened in Chicago in a map. Number of crimes is limited to a maximum of 100 for practical purposes.
+# Chicago crime locations display
+Display of the location of crimes that happened in Chicago in a map. The number of crimes is limited to a maximum of 100 for practical purposes.
 ## How to run the code
 You need Docker and Docker-compose installed on your machine.
 Copy your Google Cloud credentials file into ```server```, then on ```docker-compose.yml``` update ```services.environment.GOOGLE_APPLICATION_CREDENTIALS``` to the path to your file.
