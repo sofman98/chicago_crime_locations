@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  server:
+    build: ./server
+    ports:
+      - 80:80
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_credentials.json
+  client:
+    build: ./client
+    ports:
+      - 8501:8501
+    environment:
+      SERVER_URL: http://server
