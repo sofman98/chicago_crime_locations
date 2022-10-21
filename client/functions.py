@@ -40,11 +40,10 @@ def get_all_crime_locations() -> Union[pd.DataFrame, None]:
     """
     byte_content = requests.get(urls.GET_ALL_CRIMES_URL).content
     data_dict = json.loads(byte_content)
-    records = data_dict['records']
-    data = pd.DataFrame.from_records(records)
-
-    if all(i in data.columns for i in ['latitude' and 'longitude']):
-        return data[['latitude', 'longitude']]
+    locations = data_dict['locations']
+    if locations:
+        data = pd.DataFrame(locations, columns=['latitude', 'longitude'])
+        return data
 
     return None
 
@@ -72,10 +71,9 @@ def query_crimes(
 
     byte_content = requests.get(url).content
     data_dict = json.loads(byte_content)
-    records = data_dict['records']
-    data = pd.DataFrame.from_records(records)
-
-    if all(i in data.columns for i in ['latitude' and 'longitude']):
-        return data[['latitude', 'longitude']]
+    locations = data_dict['locations']
+    if locations:
+        data = pd.DataFrame(locations, columns=['latitude', 'longitude'])
+        return data
 
     return None
