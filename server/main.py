@@ -4,7 +4,6 @@ This modules house the API that communicates with chicago_crime BigQuery public 
 from datetime import date
 from typing import Any, Dict, List, Tuple, Union
 from fastapi import FastAPI
-from google.cloud import bigquery
 import pandas as pd
 
 app = FastAPI()
@@ -12,12 +11,12 @@ app = FastAPI()
 @app.get("/get_all_chicago_crimes")
 def get_all_chicago_crimes() -> Dict[str, List[Tuple[float, float]]]:
   """
-    Retrieves all crime locations.
-    Args:
-        (empty)
-    Returns:
-        (Dict[str, List[Tuple[float, float]]]): a dict with 'locations' as key and as value a list of tuples containing the location info of all crimes in the form:
-        [(latitude1, longitude1), (latitude2, longitude2)..etc]
+  Retrieves all crime locations.
+  Args:
+      (empty)
+  Returns:
+      (Dict[str, List[Tuple[float, float]]]): a dict with 'locations' as key and as value a list of tuples containing the location info of all crimes in the form:
+      [(latitude1, longitude1), (latitude2, longitude2)..etc]
   """
 
   sql_query = """
@@ -38,14 +37,14 @@ def filter(
     end_date: Union[date, None] = None
   ) -> Dict[str, List[Tuple[float, float]]]:
   """
-    Queries data by providing the type of the crime and the interval of time in which it happened.
-    Args:
-        - primary_type (str): type of crime committed.
-        - start_date (date): date at which we consider crimes.
-        - end_date (date): date to which we consider crimes.
-    Returns:
-        (Dict[str, List[Tuple[float, float]]]): a dict with 'locations' as key and as value a list of tuples containing the location info of matching crimes in the form:
-        [(latitude1, longitude1), (latitude2, longitude2)..etc]
+  Queries data by providing the type of the crime and the interval of time in which it happened.
+  Args:
+      - primary_type (str): type of crime committed.
+      - start_date (date): date at which we consider crimes.
+      - end_date (date): date to which we consider crimes.
+  Returns:
+      (Dict[str, List[Tuple[float, float]]]): a dict with 'locations' as key and as value a list of tuples containing the location info of matching crimes in the form:
+      [(latitude1, longitude1), (latitude2, longitude2)..etc]
   """
   sql_query = f"""
   SELECT latitude, longitude FROM `bigquery-public-data.chicago_crime.crime`
@@ -61,6 +60,14 @@ def filter(
 
 @app.get("/get_meta_data")
 def get_meta_data() -> Dict[str, Any]:
+  """
+  Sends meta-data about the dataset to query it, this includes: 1. all crime types; 2. the earliest crime date; 3. the latest crime date.
+  Args:
+   (Empty)
+  Returns:
+    (Dict[str, Any]): A dictionnary with 3 elements corresponding to: 1- a list of the possible types of crimes, 
+            2- the earliest crime date, 3- the latest crime date.
+  """
   all_types_query = """
   SELECT DISTINCT primary_type FROM `bigquery-public-data.chicago_crime.crime`
   WHERE latitude IS NOT NULL
