@@ -8,8 +8,8 @@ import pandas as pd
 
 app = FastAPI()
 
-@app.get("/get_all_chicago_crimes")
-def get_all_chicago_crimes() -> Dict[str, List[Tuple[float, float]]]:
+@app.get("/get_all_chicago_crime_locations")
+def get_all_chicago_crime_locations() -> Dict[str, List[Tuple[float, float]]]:
   """
   Retrieves all crime locations.
   Args:
@@ -31,7 +31,7 @@ def get_all_chicago_crimes() -> Dict[str, List[Tuple[float, float]]]:
 
 
 @app.get("/query")
-def filter(
+def query_chicago_crime_locations(
     primary_type: Union[str, None] = None,
     start_date: Union[date, None] = None,
     end_date: Union[date, None] = None

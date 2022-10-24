@@ -43,7 +43,7 @@ if __name__=="__main__":
 
     # do the query and retrieve the data
     if query_button:
-        st.session_state.data = functions.query_crimes(primary_type, start_date, end_date)
+        st.session_state.data = functions.query_crime_locations(primary_type, start_date, end_date)
 
     # Reset dashboard to show all data
     if show_all_button:

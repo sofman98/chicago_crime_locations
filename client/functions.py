@@ -48,7 +48,7 @@ def get_all_crime_locations() -> Union[pd.DataFrame, None]:
     return None
 
 @st.cache
-def query_crimes(
+def query_crime_locations(
         primary_type: str,
         start_date: date,
         end_date: date
