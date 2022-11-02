@@ -9,6 +9,7 @@ import pandas as pd
 import json
 import urls
 
+
 @st.cache
 def get_meta_data() -> Tuple[List[str], date, date]:
     """
@@ -16,17 +17,20 @@ def get_meta_data() -> Tuple[List[str], date, date]:
     Args:
         (empty)
     Returns:
-        (Tuple[List[str], date, date]): Respectively: 1- a list of the possible types of crimes, 
+        (Tuple[List[str], date, date]): Respectively: 1- a list of the possible types of crimes,
             2- the earliest crime date, 3- the latest crime date.
     """
     byte_content = requests.get(urls.GET_META_DATA_URL).content
     data_dict = json.loads(byte_content)
 
-    primary_types = data_dict['primary_types']
-    earliest_crime_date = datetime.strptime(data_dict['earliest_crime_date'], "%Y-%m-%d")
-    latest_crime_date = datetime.strptime(data_dict['latest_crime_date'], "%Y-%m-%d")
+    primary_types = data_dict["primary_types"]
+    earliest_crime_date = datetime.strptime(
+        data_dict["earliest_crime_date"], "%Y-%m-%d"
+    )
+    latest_crime_date = datetime.strptime(data_dict["latest_crime_date"], "%Y-%m-%d")
 
     return primary_types, earliest_crime_date, latest_crime_date
+
 
 @st.cache
 def get_all_crime_locations() -> Union[pd.DataFrame, None]:
@@ -40,19 +44,18 @@ def get_all_crime_locations() -> Union[pd.DataFrame, None]:
     """
     byte_content = requests.get(urls.GET_ALL_CRIMES_URL).content
     data_dict = json.loads(byte_content)
-    locations = data_dict['locations']
+    locations = data_dict["locations"]
     if locations:
-        data = pd.DataFrame(locations, columns=['latitude', 'longitude'])
+        data = pd.DataFrame(locations, columns=["latitude", "longitude"])
         return data
 
     return None
 
+
 @st.cache
 def query_crime_locations(
-        primary_type: str,
-        start_date: date,
-        end_date: date
-    ) -> Union[pd.DataFrame, None]:
+    primary_type: str, start_date: date, end_date: date
+) -> Union[pd.DataFrame, None]:
     """
     Communicates with API to query data by providing the type of the crime and the interval of time in which it happened.
     Args:
@@ -64,16 +67,20 @@ def query_crime_locations(
             the location info of matching crimes. Returns None if no data.
     """
     # give the "ALL" option the regex code for all possible names
-    if primary_type == 'ALL':
-        primary_type = '%'
+    if primary_type == "ALL":
+        primary_type = "%"
 
-    url = urls.QUERY_CRIMES_URL.format(primary_type=primary_type, start_date=start_date, end_date=end_date)
+    url = urls.QUERY_CRIMES_URL
+    params = dict()
+    params["primary_type"] = primary_type
+    params["start_date"] = start_date
+    params["end_date"] = end_date
 
-    byte_content = requests.get(url).content
+    byte_content = requests.get(url, params).content
     data_dict = json.loads(byte_content)
-    locations = data_dict['locations']
+    locations = data_dict["locations"]
     if locations:
-        data = pd.DataFrame(locations, columns=['latitude', 'longitude'])
+        data = pd.DataFrame(locations, columns=["latitude", "longitude"])
         return data
 
     return None
